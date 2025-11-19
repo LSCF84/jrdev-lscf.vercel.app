@@ -1,21 +1,39 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-    // Configuración de Tailwind con tema fijo: Dark mode y Cian vibrante (similar a jrdev-chi)
+    // ------------------------------------------------------------------
+    // 1. CONFIGURACIÓN INICIAL DE COLORES Y TAILWIND
+    // ------------------------------------------------------------------
+    
+    // Paletas disponibles (nombre, color principal, color oscuro de hover)
+    const COLOR_PALETTES = {
+        cyan: { primary: '#00FFFF', dark: '#00D5D5' },
+        blue: { primary: '#3B82F6', dark: '#2563EB' },
+        pink: { primary: '#EC4899', dark: '#DB2777' },
+        lime: { primary: '#84CC16', dark: '#65A30D' },
+        red: { primary: '#EF4444', dark: '#DC2626' }
+    };
+
+    // Color por defecto (se cargará desde localStorage si existe)
+    let primaryColor = COLOR_PALETTES.cyan.primary; 
+    let darkColor = COLOR_PALETTES.cyan.dark;
+    
+    // Configuración de Tailwind para usar la variable CSS --color-primary
     tailwind.config = {
         theme: {
             extend: {
                 colors: {
-                    // Colores Fijos basados en el tema moderno/oscuro
-                    'primary': '#00FFFF', // Cian Vibrante para CTA y Focus
+                    'primary-dynamic': 'var(--color-primary)', // Color principal dinámico
+                    'primary-dark-dynamic': 'var(--color-primary-dark)', // Color de hover dinámico
                     'secondary': '#343A40', 
-                    'accent': '#0D6EFD', // Azul para el botón de Recarga
-                    'form-bg': '#282A2E', // Fondo del formulario
-                    'page-bg': '#1E2124', // Fondo de la página (Charcoal oscuro)
+                    'accent': '#0D6EFD', // Azul fijo para el botón de recarga
+                    'form-bg': '#282A2E', 
+                    'page-bg': '#1E2124', 
                 },
             },
         },
     }
 </script>
+
 <style>
     /* Estilos generales para Inter y centrado */
     body {
@@ -26,20 +44,50 @@
         align-items: center;
         min-height: 100vh;
         padding: 20px;
+        /* Definición inicial de las variables CSS */
+        --color-primary: #00FFFF; 
+        --color-primary-dark: #00D5D5;
     }
     .form-container {
         max-width: 550px;
         width: 100%;
-        background-color: #282A2E; /* Fondo del formulario fijo */
+        background-color: #282A2E; 
+        position: relative; /* Necesario para posicionar el selector */
     }
-    /* Estilos dinámicos para el color principal (primary: #00FFFF) */
-    .bg-primary { background-color: #00FFFF !important; }
-    /* Calculamos un color más oscuro para el hover, por ejemplo #00D5D5 */
-    .hover\:bg-primary-dark:hover { background-color: #00D5D5 !important; } 
-    .focus\:ring-primary:focus { --tw-ring-color: #00FFFF !important; }
-    .focus\:border-primary:focus { border-color: #00FFFF !important; }
-    .text-primary { color: #00FFFF !important; }
-    .hover\:text-primary-dark:hover { color: #00D5D5 !important; }
+
+    /* Estilos dinámicos usando las variables CSS */
+    .bg-primary-dynamic { background-color: var(--color-primary) !important; }
+    .hover\:bg-primary-dark-dynamic:hover { background-color: var(--color-primary-dark) !important; } 
+    .focus\:ring-primary-dynamic:focus { --tw-ring-color: var(--color-primary) !important; }
+    .focus\:border-primary-dynamic:focus { border-color: var(--color-primary) !important; }
+    .text-primary-dynamic { color: var(--color-primary) !important; }
+    .hover\:text-primary-dark-dynamic:hover { color: var(--color-primary-dark) !important; }
+    .border-primary-dynamic { border-color: var(--color-primary) !important; }
+
+    /* Estilos del selector de color */
+    .color-picker {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: 8px;
+    }
+    .color-circle {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.1s;
+        border: 2px solid transparent;
+        box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+    .color-circle:hover {
+        transform: scale(1.1);
+    }
+    .color-circle.selected {
+        border-color: #FFFFFF; /* Borde blanco para el color seleccionado */
+        box-shadow: 0 0 10px var(--color-primary); /* Brillo del color seleccionado */
+    }
 
     /* Clases para la transición de la alerta de error */
     .alert-transition { transition: all 0.3s ease-in-out; }
@@ -50,13 +98,20 @@
 <div class="form-container rounded-xl shadow-2xl p-6 md:p-10">
     
     <!-- --------------------------------------- -->
-    <!-- 1. Formulario de Contacto (Visible por defecto) -->
+    <!-- 1. Selector de Paleta de Colores -->
+    <!-- --------------------------------------- -->
+    <div id="colorPicker" class="color-picker" title="Seleccionar color de acento">
+        <!-- Los círculos se inyectan aquí con JavaScript -->
+    </div>
+    
+    <!-- --------------------------------------- -->
+    <!-- 2. Formulario de Contacto (Visible por defecto) -->
     <!-- --------------------------------------- -->
     <div id="contactFormContainer">
         <h1 class="text-3xl font-bold text-white mb-2">¡Empecemos a trabajar juntos!</h1>
         <p class="text-gray-400 mb-8">Rellena este breve formulario y me pondré en contacto contigo lo antes posible.</p>
 
-        <!-- AÑADIDA CAPA DE PREVENCIÓN: action="javascript:return false;" -->
+        <!-- action="javascript:return false;" previene la navegación por defecto -->
         <form id="contactForm" action="javascript:return false;" method="POST" class="space-y-6">
 
             <!-- Mensaje de Alerta (Solo para errores) -->
@@ -68,7 +123,7 @@
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-300">Nombre completo *</label>
                 <input type="text" id="name" name="Nombre completo" required
-                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary">
+                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary-dynamic focus:border-primary-dynamic">
             </div>
 
             <!-- Email (CRUCIAL: usa '_replyto' para Formspree) -->
@@ -76,14 +131,14 @@
                 <label for="email" class="block text-sm font-medium text-gray-300">Email *</label>
                 <input type="email" id="email" name="_replyto" required 
                     placeholder="tu_correo@dominio.com"
-                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary">
+                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary-dynamic focus:border-primary-dynamic">
             </div>
 
             <!-- Tipo de Proyecto -->
             <div>
                 <label for="project_type" class="block text-sm font-medium text-gray-300">¿En qué puedo ayudarte? *</label>
                 <select id="project_type" name="Tipo de Proyecto" required
-                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary focus:border-primary appearance-none">
+                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary-dynamic focus:border-primary-dynamic appearance-none">
                     <option value="">Selecciona una opción</option>
                     <option value="Desarrollo Web (Landing Page)">Desarrollo Web (Landing Page)</option>
                     <option value="Desarrollo Web (E-commerce)">Desarrollo Web (E-commerce)</option>
@@ -97,14 +152,14 @@
             <div>
                 <label for="project_details" class="block text-sm font-medium text-gray-300">Cuéntame más detalles sobre lo que necesitas:</label>
                 <textarea id="project_details" name="Detalles del Proyecto" rows="4" 
-                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary"></textarea>
+                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary-dynamic focus:border-primary-dynamic"></textarea>
             </div>
 
             <!-- Presupuesto Estimado -->
             <div>
                 <label for="budget" class="block text-sm font-medium text-gray-300">Presupuesto estimado (Opcional)</label>
                 <select id="budget" name="Presupuesto Estimado"
-                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary focus:border-primary appearance-none">
+                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary-dynamic focus:border-primary-dynamic appearance-none">
                     <option value="No especificado">Selecciona un rango</option>
                     <option value="Menos de 1000€">Menos de 1000€</option>
                     <option value="1000€ - 3000€">1000€ - 3000€</option>
@@ -115,7 +170,7 @@
 
             <!-- Botón de Envío -->
             <button type="submit" id="submitButton"
-                    class="w-full py-3 bg-primary text-gray-900 font-bold rounded-lg shadow-lg hover:bg-primary-dark focus:outline-none focus:ring-4 focus:ring-primary transition duration-150 ease-in-out">
+                    class="w-full py-3 bg-primary-dynamic text-gray-900 font-bold rounded-lg shadow-lg hover:bg-primary-dark-dynamic focus:outline-none focus:ring-4 focus:ring-primary-dynamic transition duration-150 ease-in-out">
                 Enviar Solicitud
             </button>
             
@@ -126,7 +181,7 @@
 
 
     <!-- --------------------------------------- -->
-    <!-- 2. Mensaje de Éxito (Oculto por defecto) -->
+    <!-- 3. Mensaje de Éxito (Oculto por defecto) -->
     <!-- --------------------------------------- -->
     <div id="successMessage" class="hidden text-center py-10 md:py-16">
         <!-- Icono de Check Grande (usando SVG) -->
@@ -147,40 +202,99 @@
     </div>
     
     <p class="text-center text-sm text-gray-500 mt-4">
-        Volver al <a href="#" class="text-primary hover:text-primary-dark">Portafolio Principal</a>
+        Volver al <a href="#" class="text-primary-dynamic hover:text-primary-dark-dynamic">Portafolio Principal</a>
     </p>
 </div>
 
 <script>
     // ----------------------------------------------------
-    // Lógica JavaScript para el manejo del formulario
+    // Lógica JavaScript para el manejo del formulario y colores
     // ----------------------------------------------------
     
-    // **********************************************************************
-    // *** ¡ATENCIÓN! DEBES REEMPLAZAR ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
-    // Si esta URL es incorrecta (por ejemplo, tiene un formato incorrecto o no existe),
-    // la solicitud fallará con un error. EL ERROR 405 CASI SIEMPRE SIGNIFICA QUE ESTA URL ES INVÁLIDA
-    // O NO APUNTA A UN SERVICIO QUE ACEPTE PETICIONES POST (como Formspree).
+    // *** ¡IMPORTANTE! DEBES REEMPLAZAR ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
     const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnnwvdkl'; 
     // **********************************************************************
 
+    const root = document.documentElement;
     const formContainer = document.getElementById('contactFormContainer');
     const successMessage = document.getElementById('successMessage');
     const form = document.getElementById('contactForm');
     const button = document.getElementById('submitButton');
+    const colorPicker = document.getElementById('colorPicker');
     
-    // Inicializar la visibilidad
+    // ----------------------------------------------------
+    // 1. GESTIÓN DE COLORES
+    // ----------------------------------------------------
+
+    /**
+     * Aplica el color seleccionado a las variables CSS y lo guarda en localStorage.
+     * @param {string} key - La clave de la paleta (ej. 'cyan').
+     */
+    function applyColor(key) {
+        const palette = COLOR_PALETTES[key];
+        if (!palette) return;
+
+        primaryColor = palette.primary;
+        darkColor = palette.dark;
+        
+        // Aplicar a las variables CSS
+        root.style.setProperty('--color-primary', primaryColor);
+        root.style.setProperty('--color-primary-dark', darkColor);
+
+        // Guardar la clave en localStorage
+        localStorage.setItem('themeColor', key);
+        
+        updateColorPicker(key);
+    }
+    
+    /**
+     * Dibuja los círculos de selección de color y asigna eventos.
+     */
+    function setupColorPicker() {
+        let pickerHTML = '';
+        for (const key in COLOR_PALETTES) {
+            const color = COLOR_PALETTES[key].primary;
+            pickerHTML += `
+                <div class="color-circle" 
+                     data-color-key="${key}" 
+                     style="background-color: ${color};"
+                     title="Cambiar a ${key}">
+                </div>
+            `;
+        }
+        colorPicker.innerHTML = pickerHTML;
+
+        // Asignar el evento click
+        colorPicker.querySelectorAll('.color-circle').forEach(circle => {
+            circle.addEventListener('click', (e) => {
+                applyColor(e.target.dataset.colorKey);
+            });
+        });
+    }
+
+    /**
+     * Marca el círculo seleccionado.
+     * @param {string} selectedKey - La clave de la paleta seleccionada.
+     */
+    function updateColorPicker(selectedKey) {
+        colorPicker.querySelectorAll('.color-circle').forEach(circle => {
+            circle.classList.remove('selected');
+            if (circle.dataset.colorKey === selectedKey) {
+                circle.classList.add('selected');
+            }
+        });
+    }
+
+
+    // ----------------------------------------------------
+    // 2. GESTIÓN DEL FORMULARIO
+    // ----------------------------------------------------
+    
     function showForm() {
         formContainer.classList.remove('hidden');
         successMessage.classList.add('hidden');
     }
     
-    window.onload = function() {
-        showForm();
-        hideAlert();
-    }
-
-
     /**
      * Muestra el mensaje de éxito y oculta el formulario.
      */
@@ -191,17 +305,16 @@
     }
 
     form.addEventListener('submit', async function(event) {
-        event.preventDefault(); // ¡CRUCIAL! Previene el envío por defecto del navegador.
+        event.preventDefault(); // ¡CRUCIAL! Previene el envío por defecto.
 
         const formData = new FormData(form);
 
-        // Ocultar alerta de error anterior al nuevo intento
         hideAlert(); 
 
-        // Mostrar estado de carga
+        // Mostrar estado de carga y cambiar estilo del botón
         button.disabled = true;
         button.textContent = 'Enviando...';
-        button.classList.remove('bg-primary');
+        button.classList.remove('bg-primary-dynamic', 'hover:bg-primary-dark-dynamic');
         button.classList.add('bg-gray-500');
 
         try {
@@ -214,18 +327,16 @@
             });
 
             if (response.ok) {
-                // Éxito: Reemplazamos el formulario con el mensaje de éxito persistente
                 showSuccess();
                 form.reset(); 
 
             } else {
-                // Fallo: Mostramos la alerta de error
                 let message = 'Hubo un error al enviar. **Es probable que la URL de Formspree sea incorrecta (Error 405 o 404).**';
                 
                 if (response.status === 404) {
                      message = 'Error 404: Formulario no encontrado. Revisa la URL de Formspree.';
                 } else if (response.status === 405) {
-                     message = 'Error 405: Método no permitido. **¡Revisa urgentemente la constante FORMSPREE_ENDPOINT!**';
+                     message = 'Error 405: Método no permitido. **¡Revisa la constante FORMSPREE_ENDPOINT!**';
                 } else if (response.status === 422) {
                     message = 'Error 422: Datos no válidos. Asegúrate de rellenar todos los campos requeridos.';
                 } else {
@@ -241,7 +352,6 @@
 
         } catch (error) {
             console.error('Error de conexión o fetch:', error);
-            // Error de red (por ejemplo, desconexión)
             showAlert('Error de conexión. Revisa tu red o inténtalo de nuevo.', 'error');
         } finally {
             // Restablecer el botón solo si NO fue un éxito
@@ -249,7 +359,7 @@
                 button.disabled = false;
                 button.textContent = 'Enviar Solicitud';
                 button.classList.remove('bg-gray-500');
-                button.classList.add('bg-primary');
+                button.classList.add('bg-primary-dynamic', 'hover:bg-primary-dark-dynamic');
             }
         }
     });
@@ -257,7 +367,7 @@
     /**
      * Muestra una alerta de error.
      */
-    function showAlert(message, type) {
+    function showAlert(message) {
         const alertContainer = document.getElementById('alertContainer');
         const bgColor = 'bg-red-600';
         const iconSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />';
@@ -288,5 +398,21 @@
         setTimeout(() => {
             alertContainer.innerHTML = '';
         }, 300); 
+    }
+
+    // ----------------------------------------------------
+    // INICIALIZACIÓN
+    // ----------------------------------------------------
+    window.onload = function() {
+        // 1. Cargar el color guardado o usar el cian por defecto
+        const savedColorKey = localStorage.getItem('themeColor') || 'cyan';
+        
+        // 2. Configurar y aplicar el color
+        setupColorPicker();
+        applyColor(savedColorKey); 
+
+        // 3. Mostrar el formulario
+        showForm();
+        hideAlert();
     }
 </script>
