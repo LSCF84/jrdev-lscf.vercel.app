@@ -2,12 +2,11 @@
 <script>
     // ------------------------------------------------------------------
     // 1. CONFIGURACIÓN INICIAL DE COLORES Y TAILWIND
-    // Se han ELIMINADO las paletas de colores. El color ahora es fijo.
     // ------------------------------------------------------------------
     
-    // Color fijo para el acento (Cian/Turquesa)
-    const PRIMARY_COLOR = '#00FFFF'; 
-    const DARK_COLOR = '#00D5D5'; // Color de hover
+    // Color fijo para el acento (Azul Vibrante)
+    const PRIMARY_COLOR = '#1D61FF'; // El color del botón en tu imagen
+    const DARK_COLOR = '#174ACB';    // Una versión un poco más oscura para el hover
 
     
     // Configuración de Tailwind para usar los colores fijos
@@ -46,15 +45,14 @@
     }
 
     /* Estilos del acento (sustituyen a los dinámicos) */
-    /* Nota: Usamos las clases de Tailwind definidas arriba: bg-primary-static, hover:bg-primary-dark-static, etc. */
     
     /* Clase para el enlace del Portafolio (color de acento fijo) */
     .text-primary-static-link { 
-        color: #00FFFF !important; /* Color principal */
+        color: ${PRIMARY_COLOR} !important; /* Color principal */
         transition: color 0.15s ease-in-out;
     }
     .text-primary-static-link:hover { 
-        color: #00D5D5 !important; /* Color de hover */
+        color: ${DARK_COLOR} !important; /* Color de hover */
     }
 
     /* Clases para la transición de la alerta de error */
@@ -66,13 +64,10 @@
 <div class="form-container rounded-xl shadow-2xl p-6 md:p-10">
     
     <!-- --------------------------------------- -->
-    <!-- 1. Encabezado (Selector de color ELIMINADO) -->
+    <!-- 1. Encabezado -->
     <!-- --------------------------------------- -->
     <div class="flex justify-between items-start mb-2">
-        <!-- El margen derecho del título ahora es innecesario, pero lo dejamos por si hay más elementos -->
         <h1 class="text-3xl font-bold text-white mr-4">¡Empecemos a trabajar juntos!</h1>
-        
-        <!-- El div del selector de color ha sido ELIMINADO -->
     </div>
     
     <!-- --------------------------------------- -->
@@ -109,6 +104,7 @@
                 <select id="project_type" name="Tipo de Proyecto" required
                         class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary-static focus:border-primary-static appearance-none">
                     <option value="">Selecciona una opción</option>
+                    <option value="Desarrollo Web (Landing Page)">Contactar para trabajar en tu empresa</option>
                     <option value="Desarrollo Web (Landing Page)">Desarrollo Web (Landing Page)</option>
                     <option value="Desarrollo Web (E-commerce)">Desarrollo Web (E-commerce)</option>
                     <option value="Integración API/Backend">Integración API/Backend</option>
@@ -124,23 +120,10 @@
                         class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary-static focus:border-primary-static"></textarea>
             </div>
 
-            <!-- Presupuesto Estimado -->
-            <div>
-                <label for="budget" class="block text-sm font-medium text-gray-300">Presupuesto estimado (Opcional)</label>
-                <select id="budget" name="Presupuesto Estimado"
-                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary-static focus:border-primary-static appearance-none">
-                    <option value="No especificado">Selecciona un rango</option>
-                    <option value="Menos de 1000€">Menos de 1000€</option>
-                    <option value="1000€ - 3000€">1000€ - 3000€</option>
-                    <option value="3000€ - 6000€">3000€ - 6000€</option>
-                    <option value="Más de 6000€">Más de 6000€</option>
-                </select>
-            </div>
-
             <!-- Botón de Envío -->
             <!-- Ahora usa las clases estáticas para el color de fondo y hover -->
             <button type="submit" id="submitButton"
-                    class="w-full py-3 bg-primary-static text-gray-900 font-bold rounded-lg shadow-lg hover:bg-primary-dark-static focus:outline-none focus:ring-4 focus:ring-primary-static transition duration-150 ease-in-out">
+                    class="w-full py-3 bg-primary-static text-white font-bold rounded-lg shadow-lg hover:bg-primary-dark-static focus:outline-none focus:ring-4 focus:ring-primary-static transition duration-150 ease-in-out">
                 Enviar Solicitud
             </button>
             
@@ -179,7 +162,6 @@
 <script>
     // ----------------------------------------------------
     // Lógica JavaScript para el manejo del formulario
-    // Se ha eliminado toda la lógica de gestión de colores
     // ----------------------------------------------------
     
     // *** ¡IMPORTANTE! DEBES REEMPLAZAR ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
@@ -190,7 +172,6 @@
     const successMessage = document.getElementById('successMessage');
     const form = document.getElementById('contactForm');
     const button = document.getElementById('submitButton');
-    // portfolioLink y colorPicker ya no se necesitan para la lógica de color, pero los mantenemos para el HTML.
 
     
     // ----------------------------------------------------
@@ -313,7 +294,6 @@
     // INICIALIZACIÓN
     // ----------------------------------------------------
     window.onload = function() {
-        // Se ha simplificado la lógica de inicialización
         showForm();
         hideAlert();
     }
