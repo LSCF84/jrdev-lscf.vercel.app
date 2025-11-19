@@ -22,12 +22,11 @@ def handler():
     """
     
     # 1. Obtener y verificar variables de entorno CRUCIALES (Configuradas en Vercel Dashboard)
-    # NOTA: Vercel solo pasa variables en mayúsculas, así que asumimos que las variables son SENDER_EMAIL y SENDER_PASSWORD
     SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
-    SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
+    SENDER_PASSWORD_RAW = os.environ.get("SENDER_PASSWORD")
     RECIPIENT_EMAIL = os.environ.get("RECIPIENT_EMAIL")
 
-    if not all([SENDER_EMAIL, SENDER_PASSWORD, RECIPIENT_EMAIL]):
+    if not all([SENDER_EMAIL, SENDER_PASSWORD_RAW, RECIPIENT_EMAIL]):
         # Esto debería capturar el caso si no están definidas
         print("ERROR: Faltan variables de entorno cruciales (SENDER_EMAIL, SENDER_PASSWORD, RECIPIENT_EMAIL).")
         response = make_response(jsonify({
@@ -37,6 +36,10 @@ def handler():
         # Añadir encabezado CORS a la respuesta de error
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
+
+    # CORRECCIÓN CRUCIAL: Eliminar cualquier espacio en blanco en la contraseña
+    # Esto soluciona problemas con las Contraseñas de Aplicación de 16 caracteres de Google.
+    SENDER_PASSWORD = SENDER_PASSWORD_RAW.replace(" ", "")
 
     # 2. Extracción y Validación de datos del formulario
     form_data = request.form
@@ -91,7 +94,7 @@ def handler():
             server.starttls()  # Protocolo seguro
             
             # Autenticación: ESTE es el punto donde se usa SENDER_PASSWORD
-            server.login(SENDER_EMAIL, SENDER_PASSWORD)
+            server.login(SENDER_EMAIL, SENDER_PASSWORD) # Usamos la versión sin espacios
             
             # Envío
             server.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, msg.as_string())
