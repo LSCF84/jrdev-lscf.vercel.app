@@ -1,300 +1,326 @@
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-    // ------------------------------------------------------------------
-    // 1. CONFIGURACIÓN INICIAL DE COLORES Y TAILWIND
-    // ------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- El título de la pestaña del navegador que querías cambiar -->
+    <title>L.S.C.F</title> 
     
-    // Color fijo para el acento (Azul Vibrante)
-    const PRIMARY_COLOR = '#1D61FF'; // El color del botón en tu imagen
-    const DARK_COLOR = '#174ACB';    // Una versión un poco más oscura para el hover
-
+    <!-- Metaetiqueta esencial para la responsividad en móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    // Configuración de Tailwind para usar los colores fijos
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    // Ahora se definen los colores fijos directamente
-                    'primary-static': PRIMARY_COLOR, 
-                    'primary-dark-static': DARK_COLOR, 
-                    'secondary': '#343A40', 
-                    'accent': '#0D6EFD', // Azul fijo para el botón de recarga (diferente al acento principal)
-                    'form-bg': '#282A2E', 
-                    'page-bg': '#1E2124', 
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        // ------------------------------------------------------------------
+        // 1. CONFIGURACIÓN INICIAL DE COLORES Y TAILWIND
+        // ------------------------------------------------------------------
+        
+        // Color fijo para el acento (Azul Vibrante de tu imagen)
+        const PRIMARY_COLOR = '#1D61FF'; 
+        const DARK_COLOR = '#174ACB';    
+    
+        
+        // Configuración de Tailwind para usar los colores fijos
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Se definen los colores fijos directamente
+                        'primary-static': PRIMARY_COLOR, 
+                        'primary-dark-static': DARK_COLOR, 
+                        'secondary': '#343A40', 
+                        'accent': '#0D6EFD', // Azul fijo para el botón de recarga (diferente al acento principal)
+                        'form-bg': '#282A2E', 
+                        'page-bg': '#1E2124', 
+                    },
                 },
             },
-        },
-    }
-</script>
-
-<style>
-    /* Estilos generales para Inter y centrado */
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: #1E2124; /* Fondo oscuro fijo */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 20px;
-    }
-    .form-container {
-        max-width: 550px;
-        width: 100%;
-        background-color: #282A2E; 
-    }
-
-    /* Estilos del acento (sustituyen a los dinámicos) */
-    
-    /* Clase para el enlace del Portafolio (color de acento fijo) */
-    .text-primary-static-link { 
-        color: ${PRIMARY_COLOR} !important; /* Color principal */
-        transition: color 0.15s ease-in-out;
-    }
-    .text-primary-static-link:hover { 
-        color: ${DARK_COLOR} !important; /* Color de hover */
-    }
-
-    /* Clases para la transición de la alerta de error */
-    .alert-transition { transition: all 0.3s ease-in-out; }
-    .alert-closed { opacity: 0; height: 0; margin-bottom: 0 !important; }
-    .alert-open { opacity: 100; height: auto; margin-bottom: 1.5rem; }
-</style>
-
-<div class="form-container rounded-xl shadow-2xl p-6 md:p-10">
-    
-    <!-- --------------------------------------- -->
-    <!-- 1. Encabezado -->
-    <!-- --------------------------------------- -->
-    <div class="flex justify-between items-start mb-2">
-        <h1 class="text-3xl font-bold text-white mr-4">¡Empecemos a trabajar juntos!</h1>
-    </div>
-    
-    <!-- --------------------------------------- -->
-    <!-- 2. Formulario de Contacto (Visible por defecto) -->
-    <!-- --------------------------------------- -->
-    <div id="contactFormContainer">
-        <p class="text-gray-400 mb-8">Rellena este breve formulario y me pondré en contacto contigo lo antes posible.</p>
-
-        <form id="contactForm" action="javascript:return false;" method="POST" class="space-y-6">
-
-            <!-- Mensaje de Alerta (Solo para errores) -->
-            <div id="alertContainer" class="alert-transition alert-closed">
-                <!-- Contenido del mensaje de error se inyecta aquí -->
-            </div>
-
-            <!-- Nombre Completo -->
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-300">Nombre completo *</label>
-                <input type="text" id="name" name="Nombre completo" required
-                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary-static focus:border-primary-static">
-            </div>
-
-            <!-- Email (CRUCIAL: usa '_replyto' para Formspree) -->
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-300">Email *</label>
-                <input type="email" id="email" name="_replyto" required 
-                    placeholder="tu_correo@dominio.com"
-                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary-static focus:border-primary-static">
-            </div>
-
-            <!-- Tipo de Proyecto -->
-            <div>
-                <label for="project_type" class="block text-sm font-medium text-gray-300">¿En qué puedo ayudarte? *</label>
-                <select id="project_type" name="Tipo de Proyecto" required
-                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary-static focus:border-primary-static appearance-none">
-                    <option value="">Selecciona una opción</option>
-                    <option value="Desarrollo Web (Landing Page)">Contactar para trabajar en tu empresa</option>
-                    <option value="Desarrollo Web (Landing Page)">Desarrollo Web (Landing Page)</option>
-                    <option value="Desarrollo Web (E-commerce)">Desarrollo Web (E-commerce)</option>
-                    <option value="Integración API/Backend">Integración API/Backend</option>
-                    <option value="Entrevista, para trabajar en tu empresa">Entrevista, para trabajar en tu empresa</option>
-                    <option value="Otro">Otro</option>
-                </select>
-            </div>
-
-            <!-- Detalles del Proyecto -->
-            <div>
-                <label for="project_details" class="block text-sm font-medium text-gray-300">Cuéntame más detalles sobre lo que necesitas:</label>
-                <textarea id="project_details" name="Detalles del Proyecto" rows="4" 
-                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary-static focus:border-primary-static"></textarea>
-            </div>
-
-            <!-- Botón de Envío -->
-            <!-- Ahora usa las clases estáticas para el color de fondo y hover -->
-            <button type="submit" id="submitButton"
-                    class="w-full py-3 bg-primary-static text-white font-bold rounded-lg shadow-lg hover:bg-primary-dark-static focus:outline-none focus:ring-4 focus:ring-primary-static transition duration-150 ease-in-out">
-                Enviar Solicitud
-            </button>
-            
-            <!-- Campo Honeypot Oculto (Anti-spam de Formspree) -->
-            <input type="text" name="_gotcha" style="display:none" />
-        </form>
-    </div>
-
-
-    <!-- --------------------------------------- -->
-    <!-- 3. Mensaje de Éxito (Oculto por defecto) -->
-    <!-- --------------------------------------- -->
-    <div id="successMessage" class="hidden text-center py-10 md:py-16">
-        <!-- Icono de Check Grande (usando SVG) -->
-        <svg class="w-20 h-20 mx-auto text-green-500 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-
-        <h2 class="text-3xl font-bold text-white mb-3">¡Mensaje Enviado con Éxito!</h2>
-        <p class="text-gray-400 text-lg mb-8">
-            Gracias por ponerte en contacto. Revisaré tu solicitud lo antes posible y te responderé directamente al correo electrónico que proporcionaste.
-        </p>
-        
-        <!-- Botón para volver o recargar. Usa el color 'accent' (Azul) para contraste -->
-        <button onclick="window.location.reload();"
-                class="py-2 px-6 bg-accent text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 transition duration-150 ease-in-out">
-            Volver al Formulario
-        </button>
-    </div>
-    
-    <p class="text-center text-sm text-gray-500 mt-4">
-        Volver al <a href="#" id="portfolioLink" class="text-primary-static-link">Portafolio Principal</a>
-    </p>
-</div>
-
-<script>
-    // ----------------------------------------------------
-    // Lógica JavaScript para el manejo del formulario
-    // ----------------------------------------------------
-    
-    // *** ¡IMPORTANTE! DEBES REEMPLAZAR ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
-    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnnwvdkl'; 
-    // **********************************************************************
-
-    const formContainer = document.getElementById('contactFormContainer');
-    const successMessage = document.getElementById('successMessage');
-    const form = document.getElementById('contactForm');
-    const button = document.getElementById('submitButton');
-
-    
-    // ----------------------------------------------------
-    // 1. GESTIÓN DEL FORMULARIO
-    // ----------------------------------------------------
-    
-    function showForm() {
-        formContainer.classList.remove('hidden');
-        successMessage.classList.add('hidden');
-    }
-    
-    /**
-     * Muestra el mensaje de éxito y oculta el formulario.
-     */
-    function showSuccess() {
-        formContainer.classList.add('hidden');
-        successMessage.classList.remove('hidden');
-        hideAlert(); // Asegurar que la alerta de error esté oculta
-    }
-
-    form.addEventListener('submit', async function(event) {
-        event.preventDefault(); // ¡CRUCIAL! Previene el envío por defecto.
-
-        const formData = new FormData(form);
-
-        hideAlert(); 
-
-        // Mostrar estado de carga y cambiar estilo del botón
-        button.disabled = true;
-        button.textContent = 'Enviando...';
-        // Usamos las clases estáticas para el color base
-        button.classList.remove('bg-primary-static', 'hover:bg-primary-dark-static');
-        button.classList.add('bg-gray-500', 'cursor-not-allowed');
-
-        try {
-            const response = await fetch(FORMSPREE_ENDPOINT, {
-                method: 'POST', 
-                body: formData,
-                headers: {
-                    'Accept': 'application/json' 
-                }
-            });
-
-            if (response.ok) {
-                showSuccess();
-                form.reset(); 
-
-            } else {
-                let message = 'Hubo un error al enviar. **Es probable que la URL de Formspree sea incorrecta (Error 405 o 404).**';
-                
-                if (response.status === 404) {
-                     message = 'Error 404: Formulario no encontrado. Revisa la URL de Formspree.';
-                } else if (response.status === 405) {
-                     message = 'Error 405: Método no permitido. **¡Revisa la constante FORMSPREE_ENDPOINT!**';
-                } else if (response.status === 422) {
-                    message = 'Error 422: Datos no válidos. Asegúrate de rellenar todos los campos requeridos.';
-                } else {
-                    try {
-                        const errorData = await response.json();
-                        message = errorData.error || message;
-                    } catch (e) {
-                        message = `Error de Formspree (código: ${response.status}). Inténtalo de nuevo.`;
-                    }
-                }
-                showAlert(message, 'error');
-            }
-
-        } catch (error) {
-            console.error('Error de conexión o fetch:', error);
-            showAlert('Error de conexión. Revisa tu red o inténtalo de nuevo.', 'error');
-        } finally {
-            // Restaurar el botón solo si NO fue un éxito
-            if (successMessage.classList.contains('hidden')) {
-                button.disabled = false;
-                button.textContent = 'Enviar Solicitud';
-                button.classList.remove('bg-gray-500', 'cursor-not-allowed');
-                // IMPORTANTE: Volver a añadir las clases estáticas
-                button.classList.add('bg-primary-static', 'hover:bg-primary-dark-static');
-            }
         }
-    });
-
-    /**
-     * Muestra una alerta de error.
-     */
-    function showAlert(message) {
-        const alertContainer = document.getElementById('alertContainer');
-        const bgColor = 'bg-red-600';
-        const iconSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />';
-
-        const alertHTML = `
-            <div class="${bgColor} text-white p-4 rounded-lg flex items-center shadow-md">
-                <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    ${iconSvg}
-                </svg>
-                <p class="text-sm font-medium">${message}</p>
-            </div>
-        `;
+    </script>
+    
+    <style>
+        /* Estilos generales para Inter y centrado */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1E2124; /* Fondo oscuro fijo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 550px;
+            width: 100%;
+            background-color: #282A2E; 
+        }
+    
+        /* Estilos del acento (sustituyen a los dinámicos) */
         
-        alertContainer.innerHTML = alertHTML;
-        alertContainer.classList.remove('alert-closed');
-        alertContainer.classList.add('alert-open');
-    }
+        /* Clase para el enlace del Portafolio (color de acento fijo) */
+        .text-primary-static-link { 
+            color: ${PRIMARY_COLOR} !important; /* Color principal */
+            transition: color 0.15s ease-in-out;
+        }
+        .text-primary-static-link:hover { 
+            color: ${DARK_COLOR} !important; /* Color de hover */
+        }
+    
+        /* Clases para la transición de la alerta de error */
+        .alert-transition { transition: all 0.3s ease-in-out; }
+        .alert-closed { opacity: 0; height: 0; margin-bottom: 0 !important; }
+        .alert-open { opacity: 100; height: auto; margin-bottom: 1.5rem; }
+    </style>
+</head>
 
-    /**
-     * Oculta el contenedor de alerta.
-     */
-    function hideAlert() {
-        const alertContainer = document.getElementById('alertContainer');
+<body>
+    <div class="form-container rounded-xl shadow-2xl p-6 md:p-10">
         
-        alertContainer.classList.remove('alert-open');
-        alertContainer.classList.add('alert-closed');
-
-        setTimeout(() => {
-            alertContainer.innerHTML = '';
-        }, 300); 
-    }
-
-    // ----------------------------------------------------
-    // INICIALIZACIÓN
-    // ----------------------------------------------------
-    window.onload = function() {
-        showForm();
-        hideAlert();
-    }
-</script>
+        <!-- --------------------------------------- -->
+        <!-- 1. Encabezado -->
+        <!-- --------------------------------------- -->
+        <div class="flex justify-between items-start mb-2">
+            <h1 class="text-3xl font-bold text-white mr-4">¡Empecemos a trabajar juntos!</h1>
+        </div>
+        
+        <!-- --------------------------------------- -->
+        <!-- 2. Formulario de Contacto (Visible por defecto) -->
+        <!-- --------------------------------------- -->
+        <div id="contactFormContainer">
+            <p class="text-gray-400 mb-8">Rellena este breve formulario y me pondré en contacto contigo lo antes posible.</p>
+    
+            <form id="contactForm" action="javascript:return false;" method="POST" class="space-y-6">
+    
+                <!-- Mensaje de Alerta (Solo para errores) -->
+                <div id="alertContainer" class="alert-transition alert-closed">
+                    <!-- Contenido del mensaje de error se inyecta aquí -->
+                </div>
+    
+                <!-- Nombre Completo -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-300">Nombre completo *</label>
+                    <input type="text" id="name" name="Nombre completo" required
+                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary-static focus:border-primary-static">
+                </div>
+    
+                <!-- Email (CRUCIAL: usa '_replyto' para Formspree) -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-300">Email *</label>
+                    <input type="email" id="email" name="_replyto" required 
+                        placeholder="tu_correo@dominio.com"
+                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary-static focus:border-primary-static">
+                </div>
+    
+                <!-- Tipo de Proyecto -->
+                <div>
+                    <label for="project_type" class="block text-sm font-medium text-gray-300">¿En qué puedo ayudarte? *</label>
+                    <select id="project_type" name="Tipo de Proyecto" required
+                            class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary-static focus:border-primary-static appearance-none">
+                        <option value="">Selecciona una opción</option>
+                        <option value="Desarrollo Web (Landing Page)">Desarrollo Web (Landing Page)</option>
+                        <option value="Desarrollo Web (E-commerce)">Desarrollo Web (E-commerce)</option>
+                        <option value="Integración API/Backend">Integración API/Backend</option>
+                        <option value="Entrevista, para trabajar en tu empresa">Entrevista, para trabajar en tu empresa</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+    
+                <!-- Detalles del Proyecto -->
+                <div>
+                    <label for="project_details" class="block text-sm font-medium text-gray-300">Cuéntame más detalles sobre lo que necesitas:</label>
+                    <textarea id="project_details" name="Detalles del Proyecto" rows="4" 
+                            class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary-static focus:border-primary-static"></textarea>
+                </div>
+    
+                <!-- Presupuesto Estimado -->
+                <div>
+                    <label for="budget" class="block text-sm font-medium text-gray-300">Presupuesto estimado (Opcional)</label>
+                    <select id="budget" name="Presupuesto Estimado"
+                            class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary-static focus:border-primary-static appearance-none">
+                        <option value="No especificado">Selecciona un rango</option>
+                        <option value="Menos de 1000€">Menos de 1000€</option>
+                        <option value="1000€ - 3000€">1000€ - 3000€</option>
+                        <option value="3000€ - 6000€">3000€ - 6000€</option>
+                        <option value="Más de 6000€">Más de 6000€</option>
+                    </select>
+                </div>
+    
+                <!-- Botón de Envío -->
+                <button type="submit" id="submitButton"
+                        class="w-full py-3 bg-primary-static text-white font-bold rounded-lg shadow-lg hover:bg-primary-dark-static focus:outline-none focus:ring-4 focus:ring-primary-static transition duration-150 ease-in-out">
+                    Enviar Solicitud
+                </button>
+                
+                <!-- Campo Honeypot Oculto (Anti-spam de Formspree) -->
+                <input type="text" name="_gotcha" style="display:none" />
+            </form>
+        </div>
+    
+    
+        <!-- --------------------------------------- -->
+        <!-- 3. Mensaje de Éxito (Oculto por defecto) -->
+        <!-- --------------------------------------- -->
+        <div id="successMessage" class="hidden text-center py-10 md:py-16">
+            <!-- Icono de Check Grande (usando SVG) -->
+            <svg class="w-20 h-20 mx-auto text-green-500 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+    
+            <h2 class="text-3xl font-bold text-white mb-3">¡Mensaje Enviado con Éxito!</h2>
+            <p class="text-gray-400 text-lg mb-8">
+                Gracias por ponerte en contacto. Revisaré tu solicitud lo antes posible y te responderé directamente al correo electrónico que proporcionaste.
+            </p>
+            
+            <!-- Botón para volver o recargar. Usa el color 'accent' (Azul) para contraste -->
+            <button onclick="window.location.reload();"
+                    class="py-2 px-6 bg-accent text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 transition duration-150 ease-in-out">
+                Volver al Formulario
+            </button>
+        </div>
+        
+        <p class="text-center text-sm text-gray-500 mt-4">
+            Volver al <a href="#" id="portfolioLink" class="text-primary-static-link">Portafolio Principal</a>
+        </p>
+    </div>
+    
+    <script>
+        // ----------------------------------------------------
+        // Lógica JavaScript para el manejo del formulario
+        // ----------------------------------------------------
+        
+        // *** ¡IMPORTANTE! DEBES REEMPLAZAR ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
+        const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnnwvdkl'; 
+        // **********************************************************************
+    
+        const formContainer = document.getElementById('contactFormContainer');
+        const successMessage = document.getElementById('successMessage');
+        const form = document.getElementById('contactForm');
+        const button = document.getElementById('submitButton');
+    
+        
+        // ----------------------------------------------------
+        // 1. GESTIÓN DEL FORMULARIO
+        // ----------------------------------------------------
+        
+        function showForm() {
+            formContainer.classList.remove('hidden');
+            successMessage.classList.add('hidden');
+        }
+        
+        /**
+         * Muestra el mensaje de éxito y oculta el formulario.
+         */
+        function showSuccess() {
+            formContainer.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+            hideAlert(); // Asegurar que la alerta de error esté oculta
+        }
+    
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault(); // ¡CRUCIAL! Previene el envío por defecto.
+    
+            const formData = new FormData(form);
+    
+            hideAlert(); 
+    
+            // Mostrar estado de carga y cambiar estilo del botón
+            button.disabled = true;
+            button.textContent = 'Enviando...';
+            // Usamos las clases estáticas para el color de fondo y el hover
+            button.classList.remove('bg-primary-static', 'hover:bg-primary-dark-static');
+            button.classList.add('bg-gray-500', 'cursor-not-allowed');
+    
+            try {
+                const response = await fetch(FORMSPREE_ENDPOINT, {
+                    method: 'POST', 
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json' 
+                    }
+                });
+    
+                if (response.ok) {
+                    showSuccess();
+                    form.reset(); 
+    
+                } else {
+                    let message = 'Hubo un error al enviar. **Es probable que la URL de Formspree sea incorrecta (Error 405 o 404).**';
+                    
+                    if (response.status === 404) {
+                         message = 'Error 404: Formulario no encontrado. Revisa la URL de Formspree.';
+                    } else if (response.status === 405) {
+                         message = 'Error 405: Método no permitido. **¡Revisa la constante FORMSPREE_ENDPOINT!**';
+                    } else if (response.status === 422) {
+                        message = 'Error 422: Datos no válidos. Asegúrate de rellenar todos los campos requeridos.';
+                    } else {
+                        try {
+                            const errorData = await response.json();
+                            message = errorData.error || message;
+                        } catch (e) {
+                            message = `Error de Formspree (código: ${response.status}). Inténtalo de nuevo.`;
+                        }
+                    }
+                    showAlert(message, 'error');
+                }
+    
+            } catch (error) {
+                console.error('Error de conexión o fetch:', error);
+                showAlert('Error de conexión. Revisa tu red o inténtalo de nuevo.', 'error');
+            } finally {
+                // Restaurar el botón solo si NO fue un éxito
+                if (successMessage.classList.contains('hidden')) {
+                    button.disabled = false;
+                    button.textContent = 'Enviar Solicitud';
+                    button.classList.remove('bg-gray-500', 'cursor-not-allowed');
+                    // IMPORTANTE: Volver a añadir las clases estáticas
+                    button.classList.add('bg-primary-static', 'hover:bg-primary-dark-static');
+                }
+            }
+        });
+    
+        /**
+         * Muestra una alerta de error.
+         */
+        function showAlert(message) {
+            const alertContainer = document.getElementById('alertContainer');
+            const bgColor = 'bg-red-600';
+            const iconSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />';
+    
+            const alertHTML = `
+                <div class="${bgColor} text-white p-4 rounded-lg flex items-center shadow-md">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        ${iconSvg}
+                    </svg>
+                    <p class="text-sm font-medium">${message}</p>
+                </div>
+            `;
+            
+            alertContainer.innerHTML = alertHTML;
+            alertContainer.classList.remove('alert-closed');
+            alertContainer.classList.add('alert-open');
+        }
+    
+        /**
+         * Oculta el contenedor de alerta.
+         */
+        function hideAlert() {
+            const alertContainer = document.getElementById('alertContainer');
+            
+            alertContainer.classList.remove('alert-open');
+            alertContainer.classList.add('alert-closed');
+    
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 300); 
+        }
+    
+        // ----------------------------------------------------
+        // INICIALIZACIÓN
+        // ----------------------------------------------------
+        window.onload = function() {
+            showForm();
+            hideAlert();
+        }
+    </script>
+</body>
+</html>
