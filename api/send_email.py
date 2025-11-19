@@ -22,11 +22,13 @@ def handler():
     """
     
     # 1. Obtener y verificar variables de entorno CRUCIALES (Configuradas en Vercel Dashboard)
+    # NOTA: Vercel solo pasa variables en mayúsculas, así que asumimos que las variables son SENDER_EMAIL y SENDER_PASSWORD
     SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
     SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
     RECIPIENT_EMAIL = os.environ.get("RECIPIENT_EMAIL")
 
     if not all([SENDER_EMAIL, SENDER_PASSWORD, RECIPIENT_EMAIL]):
+        # Esto debería capturar el caso si no están definidas
         print("ERROR: Faltan variables de entorno cruciales (SENDER_EMAIL, SENDER_PASSWORD, RECIPIENT_EMAIL).")
         response = make_response(jsonify({
             "status": "error", 
@@ -88,7 +90,7 @@ def handler():
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=SMTP_TIMEOUT) as server:
             server.starttls()  # Protocolo seguro
             
-            # Autenticación: ESTE es el punto que falla si SENDER_PASSWORD no es la App Password
+            # Autenticación: ESTE es el punto donde se usa SENDER_PASSWORD
             server.login(SENDER_EMAIL, SENDER_PASSWORD)
             
             # Envío
@@ -104,9 +106,10 @@ def handler():
     except smtplib.SMTPAuthenticationError as e:
         # Error específico de credenciales (clave incorrecta o bloqueada)
         print(f"Error de autenticación SMTP: {e}")
+        # En el caso de que falle la autenticación, devolvemos un 500 con un mensaje útil.
         response = make_response(jsonify({
             "status": "error",
-            "message": "Error 500: Fallo en credenciales. Usa la Contraseña de Aplicación de Google."
+            "message": "Error 500: Fallo en credenciales. Verifica SENDER_PASSWORD en Vercel."
         }), 500)
         
     except Exception as e:
