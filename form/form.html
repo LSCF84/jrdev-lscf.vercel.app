@@ -28,7 +28,7 @@
         width: 100%;
         background-color: #1e2124; /* Fondo del formulario más claro */
     }
-    /* Clases para la transición de la alerta */
+    /* Clases para la transición de la alerta de error */
     .alert-transition {
         transition: all 0.3s ease-in-out;
     }
@@ -45,75 +45,104 @@
 </style>
 
 <div class="form-container rounded-xl shadow-2xl p-6 md:p-10">
-    <h1 class="text-3xl font-bold text-white mb-2">¡Empecemos a trabajar juntos!</h1>
-    <p class="text-gray-400 mb-8">Rellena este breve formulario y me pondré en contacto contigo lo antes posible.</p>
+    
+    <!-- --------------------------------------- -->
+    <!-- 1. Formulario de Contacto (Visible por defecto) -->
+    <!-- --------------------------------------- -->
+    <div id="contactFormContainer">
+        <h1 class="text-3xl font-bold text-white mb-2">¡Empecemos a trabajar juntos!</h1>
+        <p class="text-gray-400 mb-8">Rellena este breve formulario y me pondré en contacto contigo lo antes posible.</p>
 
-    <form id="contactForm" action="#" method="POST" class="space-y-6">
+        <form id="contactForm" action="#" method="POST" class="space-y-6">
 
-        <!-- Mensaje de Alerta (Éxito/Error) -->
-        <!-- Usamos clases de estilo fijas y dinámicas para controlar la visibilidad y transición -->
-        <div id="alertContainer" class="alert-transition alert-closed">
-            <!-- Contenido del mensaje se inyecta aquí -->
-        </div>
+            <!-- Mensaje de Alerta (Solo para errores, se oculta/muestra con JS) -->
+            <div id="alertContainer" class="alert-transition alert-closed">
+                <!-- Contenido del mensaje de error se inyecta aquí -->
+            </div>
 
-        <!-- Nombre Completo -->
-        <div>
-            <label for="name" class="block text-sm font-medium text-gray-300">Nombre completo *</label>
-            <input type="text" id="name" name="Nombre completo" required
-                   class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary">
-        </div>
+            <!-- Campos del Formulario... (simplificados para el ejemplo) -->
+            
+            <!-- Nombre Completo -->
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-300">Nombre completo *</label>
+                <input type="text" id="name" name="Nombre completo" required
+                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary">
+            </div>
 
-        <!-- Email (CRUCIAL: usa '_replyto' para Formspree) -->
-        <div>
-            <label for="email" class="block text-sm font-medium text-gray-300">Email *</label>
-            <input type="email" id="email" name="_replyto" required 
-                   placeholder="tu_correo@dominio.com"
-                   class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary">
-        </div>
+            <!-- Email (CRUCIAL: usa '_replyto' para Formspree) -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-300">Email *</label>
+                <input type="email" id="email" name="_replyto" required 
+                    placeholder="tu_correo@dominio.com"
+                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary">
+            </div>
 
-        <!-- Tipo de Proyecto -->
-        <div>
-            <label for="project_type" class="block text-sm font-medium text-gray-300">¿En qué puedo ayudarte? *</label>
-            <select id="project_type" name="Tipo de Proyecto" required
-                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary focus:border-primary appearance-none">
-                <option value="">Selecciona una opción</option>
-                <option value="Desarrollo Web (Landing Page)">Desarrollo Web (Landing Page)</option>
-                <option value="Desarrollo Web (E-commerce)">Desarrollo Web (E-commerce)</option>
-                <option value="Integración API/Backend">Integración API/Backend</option>
-                <option value="Entrevista, para trabajar en tu empresa">Entrevista, para trabajar en tu empresa</option>
-                <option value="Otro">Otro</option>
-            </select>
-        </div>
+            <!-- Tipo de Proyecto -->
+            <div>
+                <label for="project_type" class="block text-sm font-medium text-gray-300">¿En qué puedo ayudarte? *</label>
+                <select id="project_type" name="Tipo de Proyecto" required
+                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary focus:border-primary appearance-none">
+                    <option value="">Selecciona una opción</option>
+                    <option value="Desarrollo Web (Landing Page)">Desarrollo Web (Landing Page)</option>
+                    <option value="Desarrollo Web (E-commerce)">Desarrollo Web (E-commerce)</option>
+                    <option value="Integración API/Backend">Integración API/Backend</option>
+                    <option value="Entrevista, para trabajar en tu empresa">Entrevista, para trabajar en tu empresa</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
 
-        <!-- Detalles del Proyecto -->
-        <div>
-            <label for="project_details" class="block text-sm font-medium text-gray-300">Cuéntame más detalles sobre lo que necesitas:</label>
-            <textarea id="project_details" name="Detalles del Proyecto" rows="4" 
-                      class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary"></textarea>
-        </div>
+            <!-- Detalles del Proyecto -->
+            <div>
+                <label for="project_details" class="block text-sm font-medium text-gray-300">Cuéntame más detalles sobre lo que necesitas:</label>
+                <textarea id="project_details" name="Detalles del Proyecto" rows="4" 
+                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-primary focus:border-primary"></textarea>
+            </div>
 
-        <!-- Presupuesto Estimado -->
-        <div>
-            <label for="budget" class="block text-sm font-medium text-gray-300">Presupuesto estimado (Opcional)</label>
-            <select id="budget" name="Presupuesto Estimado"
-                    class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary focus:border-primary appearance-none">
-                <option value="No especificado">Selecciona un rango</option>
-                <option value="Menos de 1000€">Menos de 1000€</option>
-                <option value="1000€ - 3000€">1000€ - 3000€</option>
-                <option value="3000€ - 6000€">3000€ - 6000€</option>
-                <option value="Más de 6000€">Más de 6000€</option>
-            </select>
-        </div>
+            <!-- Presupuesto Estimado -->
+            <div>
+                <label for="budget" class="block text-sm font-medium text-gray-300">Presupuesto estimado (Opcional)</label>
+                <select id="budget" name="Presupuesto Estimado"
+                        class="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-primary focus:border-primary appearance-none">
+                    <option value="No especificado">Selecciona un rango</option>
+                    <option value="Menos de 1000€">Menos de 1000€</option>
+                    <option value="1000€ - 3000€">1000€ - 3000€</option>
+                    <option value="3000€ - 6000€">3000€ - 6000€</option>
+                    <option value="Más de 6000€">Más de 6000€</option>
+                </select>
+            </div>
 
-        <!-- Botón de Envío -->
-        <button type="submit" id="submitButton"
-                class="w-full py-3 bg-primary text-white font-semibold rounded-lg shadow-lg hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-800 transition duration-150 ease-in-out">
-            Enviar Solicitud
-        </button>
+            <!-- Botón de Envío -->
+            <button type="submit" id="submitButton"
+                    class="w-full py-3 bg-primary text-white font-semibold rounded-lg shadow-lg hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-800 transition duration-150 ease-in-out">
+                Enviar Solicitud
+            </button>
+            
+            <!-- Campo Honeypot Oculto (Anti-spam de Formspree) -->
+            <input type="text" name="_gotcha" style="display:none" />
+        </form>
+    </div>
+
+
+    <!-- --------------------------------------- -->
+    <!-- 2. Mensaje de Éxito (Oculto por defecto) -->
+    <!-- --------------------------------------- -->
+    <div id="successMessage" class="hidden text-center py-10 md:py-16">
+        <!-- Icono de Check Grande (usando SVG) -->
+        <svg class="w-20 h-20 mx-auto text-green-500 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+
+        <h2 class="text-3xl font-bold text-white mb-3">¡Mensaje Enviado con Éxito!</h2>
+        <p class="text-gray-400 text-lg mb-8">
+            Gracias por ponerte en contacto. Revisaré tu solicitud lo antes posible y te responderé directamente al correo electrónico que proporcionaste.
+        </p>
         
-        <!-- Campo Honeypot Oculto (Anti-spam de Formspree) -->
-        <input type="text" name="_gotcha" style="display:none" />
-    </form>
+        <!-- Botón para volver o recargar -->
+        <button onclick="window.location.reload();"
+                class="py-2 px-6 bg-accent text-white font-semibold rounded-lg shadow-lg hover:bg-cyan-600 transition duration-150 ease-in-out">
+            Volver al Formulario
+        </button>
+    </div>
     
     <p class="text-center text-sm text-gray-500 mt-4">
         Volver al <a href="#" class="text-primary hover:text-orange-600">Portafolio Principal</a>
@@ -126,47 +155,59 @@
     // ----------------------------------------------------
     
     // *** ¡ATENCIÓN! DEBES REEMPLAZAR ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
-    // Si esta URL es incorrecta o el formulario no existe, obtendrás el error 404 (Not Found).
-    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnnwvdkl'; 
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/fmoqgrkp'; 
     // **********************************************************************
+
+    const formContainer = document.getElementById('contactFormContainer');
+    const successMessage = document.getElementById('successMessage');
+    const form = document.getElementById('contactForm');
+    const button = document.getElementById('submitButton');
+
+    // Función para mostrar solo el mensaje de éxito
+    function showSuccess() {
+        formContainer.classList.add('hidden');
+        successMessage.classList.remove('hidden');
+        hideAlert(); // Asegurar que la alerta de error esté oculta
+    }
+
+    // Función para mostrar el formulario (e.g., al recargar)
+    function showForm() {
+        formContainer.classList.remove('hidden');
+        successMessage.classList.add('hidden');
+    }
 
 
     document.getElementById('contactForm').addEventListener('submit', async function(event) {
-        event.preventDefault(); // Detener el envío tradicional
+        event.preventDefault(); 
 
-        const form = event.target;
-        const button = document.getElementById('submitButton');
         const formData = new FormData(form);
 
-        // Ocultar cualquier alerta anterior al nuevo intento
+        // Ocultar alerta de error anterior al nuevo intento
         hideAlert(); 
 
         // Mostrar estado de carga
         button.disabled = true;
         button.textContent = 'Enviando...';
+        button.classList.remove('bg-primary');
+        button.classList.add('bg-gray-500');
 
         try {
             const response = await fetch(FORMSPREE_ENDPOINT, {
                 method: 'POST', 
                 body: formData,
                 headers: {
-                    // Crucial para que Formspree responda con JSON y no redirija
                     'Accept': 'application/json' 
                 }
             });
 
             if (response.ok) {
-                // Éxito: Mostrar mensaje, luego resetear formulario y ocultar alerta después de 4 segundos.
-                showAlert('¡Mensaje enviado con éxito! Recibirás mi respuesta a la mayor brevedad.', 'success');
-                
-                // Retraso para que el usuario pueda leer el mensaje de éxito
-                setTimeout(() => {
-                    form.reset(); 
-                    hideAlert();
-                }, 4000); 
+                // Éxito: Reemplazamos el formulario con el mensaje de éxito persistente
+                showSuccess();
+                // Opcional: Reiniciar el formulario en el fondo
+                form.reset(); 
 
             } else {
-                // Fallo: El mensaje de error se queda visible hasta el próximo intento.
+                // Fallo: Mostramos la alerta de error que se mantiene visible
                 let message = 'Hubo un error al enviar el formulario. **Verifica que la URL de Formspree sea correcta.**';
                 
                 if (response.status === 404) {
@@ -175,11 +216,9 @@
                     message = 'Error 422: Datos no válidos. Asegúrate de rellenar todos los campos requeridos.';
                 } else {
                     try {
-                        // Intenta obtener un mensaje de error detallado de Formspree
                         const errorData = await response.json();
                         message = errorData.error || message;
                     } catch (e) {
-                        // Si no es un JSON, usa el mensaje genérico de Formspree.
                         message = `Error de Formspree (código: ${response.status}). Inténtalo de nuevo.`;
                     }
                 }
@@ -190,28 +229,26 @@
             console.error('Error de conexión o fetch:', error);
             showAlert('Error de conexión. Revisa tu red o inténtalo de nuevo.', 'error');
         } finally {
-            // Restablecer el botón inmediatamente después del intento, independientemente del resultado.
-            button.disabled = false;
-            button.textContent = 'Enviar Solicitud';
+            // Restablecer el botón solo si NO fue un éxito (si fue éxito, se oculta el formulario)
+            if (!successMessage.classList.contains('hidden')) {
+                // Si fue éxito, el botón ya no existe en el DOM, no hacemos nada
+            } else {
+                button.disabled = false;
+                button.textContent = 'Enviar Solicitud';
+                button.classList.remove('bg-gray-500');
+                button.classList.add('bg-primary');
+            }
         }
     });
 
     /**
-     * Muestra una alerta de éxito o error en la interfaz.
-     * @param {string} message - El mensaje a mostrar.
-     * @param {'success'|'error'} type - El tipo de alerta.
+     * Muestra una alerta de error.
      */
     function showAlert(message, type) {
+        // Esta función solo se usa para ERRORES
         const alertContainer = document.getElementById('alertContainer');
-        let bgColor, iconSvg;
-        
-        if (type === 'success') {
-            bgColor = 'bg-green-600';
-            iconSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />';
-        } else {
-            bgColor = 'bg-red-600';
-            iconSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />';
-        }
+        const bgColor = 'bg-red-600';
+        const iconSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />';
 
         const alertHTML = `
             <div class="${bgColor} text-white p-4 rounded-lg flex items-center shadow-md">
@@ -222,10 +259,7 @@
             </div>
         `;
         
-        // 1. Inyectar contenido
         alertContainer.innerHTML = alertHTML;
-        
-        // 2. Transicionar a estado abierto
         alertContainer.classList.remove('alert-closed');
         alertContainer.classList.add('alert-open');
     }
@@ -236,16 +270,15 @@
     function hideAlert() {
         const alertContainer = document.getElementById('alertContainer');
         
-        // 1. Transicionar a estado cerrado
         alertContainer.classList.remove('alert-open');
         alertContainer.classList.add('alert-closed');
 
-        // 2. Limpiar el contenido después de que la transición haya terminado (300ms)
         setTimeout(() => {
             alertContainer.innerHTML = '';
         }, 300); 
     }
 
-    // Inicialización: Asegurar que esté oculto al cargar
+    // Inicialización: Asegurar que el formulario esté visible y el mensaje de éxito oculto
+    showForm();
     hideAlert();
 </script>
