@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 
 # Vercel usa la función 'handler' para Serverless Functions en Python
 # Importamos Flask para manejar la estructura de la petición web POST
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 
 # --- Configuration ---
 # IMPORTANTE: En Vercel, estas variables de entorno se configuran en el Dashboard.
@@ -36,7 +36,7 @@ def send_form_email(form_data):
     project_type = form_data.get('Tipo de Proyecto', 'N/A')
     project_details = form_data.get('Detalles del Proyecto', 'No se proporcionaron detalles')
     budget = form_data.get('Presupuesto Estimado', 'No especificado')
-
+    Reply-To
     # 2. Construir el cuerpo del correo
     body = f"""
     ¡Nueva Solicitud de Contacto desde el Formulario Web!
@@ -57,8 +57,8 @@ def send_form_email(form_data):
     msg['From'] = SENDER_EMAIL
     msg['To'] = RECIPIENT_EMAIL
     msg['Subject'] = f"Nueva Solicitud de Contacto - {name} ({project_type})"
+    msg['Reply-To'] = email
     msg.attach(MIMEText(body, 'plain'))
-
     try:
         # 4. Conexión y envío
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
@@ -78,6 +78,32 @@ def handler():
     """
     Ruta de Flask/Vercel Serverless Function para recibir la solicitud POST.
     """
+    # La función handler de Vercel (la que se ejecuta al recibir la petición)
+@app.route('/api/send_email', methods=['POST'])
+def handler():
+    """
+    Ruta de Flask/Vercel Serverless Function para recibir la solicitud POST.
+    """
+    # Request.form extrae datos del formulario multipart/form-data
+    form_data = request.form
+    
+    if not form_data:
+        # Usamos make_response para poder añadir el header CORS incluso en errores 400
+        response = make_response(jsonify({"message": "No se recibieron datos del formulario."}), 400)
+    
+    else:
+        success = send_form_email(form_data)
+        
+        if success:
+            # Respuesta de éxito
+            response = make_response(jsonify({"message": "¡Solicitud enviada con éxito!"}), 200)
+        else:
+            # Respuesta de error
+            response = make_response(jsonify({"message": "El servidor falló al enviar el correo. Revise logs y variables de entorno."}), 500)
+
+    # CORRECCIÓN CRÍTICA: Añadir el header CORS en todas las respuestas
+    response.headers.add('Access-Control-Allow-Origin', '*') 
+    return response
     # Request.form extrae datos del formulario multipart/form-data
     form_data = request.form
     
@@ -87,12 +113,11 @@ def handler():
     success = send_form_email(form_data)
     
     if success:
-        # Respuesta de éxito
-        return jsonify({"message": "¡Solicitud enviada con éxito!"}), 200
-    else:
-        # Respuesta de error
-        return jsonify({"message": "El servidor falló al enviar el correo. Revise logs y variables de entorno."}), 500
-
+        response = make_response(jsonify({"message": "¡Solicitud enviada con éxito!"}), 200)
+        else:
+    # Respuesta de error
+        response.headers.add('Access-Control-Allow-Origin', '*') # CORRECCIÓN CRÍTICA
+    return response
 # Esta línea es para compatibilidad con Vercel
 if __name__ == '__main__':
     # Esto solo se ejecuta si se inicia localmente. Vercel llama a la función `handler` directamente.
