@@ -8,10 +8,17 @@ from flask import Flask, request, jsonify, make_response
 # Inicializar Flask (necesario para manejar la solicitud HTTP)
 app = Flask(__name__)
 
-# --- Constantes de Configuración de SMTP (Fijas para Gmail) ---
-# Usamos Gmail por defecto y el puerto estándar para TLS
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
+# --- CONFIGURACIÓN DE SMTP: LECTURA OBLIGATORIA DESDE VARIABLES DE ENTORNO ---
+# CRÍTICO: Leer todos los valores de os.environ.get para evitar conflictos de constantes
+SMTP_SERVER = os.environ.get("SMTP_SERVER", "smtp.gmail.com") # Usar fallback por si acaso
+SMTP_PORT_RAW = os.environ.get("SMTP_PORT", "587")
+
+try:
+    SMTP_PORT = int(SMTP_PORT_RAW)
+except ValueError:
+    # Si la variable de puerto no es un número, forzamos el valor por defecto
+    SMTP_PORT = 587
+
 SMTP_TIMEOUT = 15 # Aumentamos el timeout a 15 segundos
 
 @app.route('/api/send_email', methods=['POST'])
@@ -27,13 +34,12 @@ def handler():
     RECIPIENT_EMAIL = os.environ.get("RECIPIENT_EMAIL")
 
     if not all([SENDER_EMAIL, SENDER_PASSWORD_RAW, RECIPIENT_EMAIL]):
-        # Esto debería capturar el caso si no están definidas
+        # Mensaje de error si faltan credenciales
         print("ERROR: Faltan variables de entorno cruciales (SENDER_EMAIL, SENDER_PASSWORD, RECIPIENT_EMAIL).")
         response = make_response(jsonify({
             "status": "error", 
             "message": "Error de configuración interna. Faltan credenciales de correo en Vercel."
         }), 500)
-        # Añadir encabezado CORS a la respuesta de error
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
@@ -46,7 +52,7 @@ def handler():
     
     # Campos obligatorios desde el HTML
     name = form_data.get('name')
-    reply_to = form_data.get('_replyto') # El email del cliente (CRUCIAL para Reply-To)
+    reply_to = form_data.get('_replyto') 
     project_type = form_data.get('Tipo de Proyecto')
     
     # Campos opcionales
@@ -83,18 +89,18 @@ def handler():
     msg['From'] = SENDER_EMAIL
     msg['To'] = RECIPIENT_EMAIL
     msg['Subject'] = subject
-    # CRUCIAL: Usar Reply-To para que al responder al correo, respondas al cliente
     msg['Reply-To'] = reply_to 
     msg.attach(MIMEText(body, 'plain'))
 
     # 4. Envío del Correo
     try:
         # Conexión al servidor SMTP
+        # Usamos las variables leídas del entorno: SMTP_SERVER, SMTP_PORT
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=SMTP_TIMEOUT) as server:
             server.starttls()  # Protocolo seguro
             
-            # Autenticación: ESTE es el punto donde se usa SENDER_PASSWORD
-            server.login(SENDER_EMAIL, SENDER_PASSWORD) # Usamos la versión sin espacios
+            # Autenticación: Usamos la clave sin espacios
+            server.login(SENDER_EMAIL, SENDER_PASSWORD) 
             
             # Envío
             server.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, msg.as_string())
@@ -109,18 +115,23 @@ def handler():
     except smtplib.SMTPAuthenticationError as e:
         # Error específico de credenciales (clave incorrecta o bloqueada)
         print(f"Error de autenticación SMTP: {e}")
-        # En el caso de que falle la autenticación, devolvemos un 500 con un mensaje útil.
         response = make_response(jsonify({
             "status": "error",
-            "message": "Error 500: Fallo en credenciales. Verifica SENDER_PASSWORD en Vercel."
+            "message": "Error 500: Fallo en credenciales. Verifica SENDER_PASSWORD o si el email tiene 2FA activado."
         }), 500)
         
     except Exception as e:
-        # Error general de conexión (timeout, servidor inaccesible)
+        # Error general de conexión (timeout, servidor inaccesible, etc.)
         print(f"Fallo general al enviar el correo: {e}")
+        # Comprobar si es un error de conexión no manejado
+        if "timeout" in str(e).lower() or "connection refused" in str(e).lower():
+            error_message = "Error de red: El servidor de correo no respondió (Timeout/Conexión)."
+        else:
+            error_message = "Error interno inesperado. Revisa logs de Vercel."
+            
         response = make_response(jsonify({
             "status": "error",
-            "message": "Error al conectar o enviar el correo. Revisa logs de Vercel."
+            "message": error_message
         }), 500)
 
     # 5. Añadir el encabezado CORS (Access-Control-Allow-Origin) a la respuesta final
