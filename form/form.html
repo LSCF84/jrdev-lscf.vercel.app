@@ -56,7 +56,8 @@
         <h1 class="text-3xl font-bold text-white mb-2">¡Empecemos a trabajar juntos!</h1>
         <p class="text-gray-400 mb-8">Rellena este breve formulario y me pondré en contacto contigo lo antes posible.</p>
 
-        <form id="contactForm" action="#" method="POST" class="space-y-6">
+        <!-- AÑADIDA CAPA DE PREVENCIÓN: action="javascript:return false;" -->
+        <form id="contactForm" action="javascript:return false;" method="POST" class="space-y-6">
 
             <!-- Mensaje de Alerta (Solo para errores) -->
             <div id="alertContainer" class="alert-transition alert-closed">
@@ -156,9 +157,10 @@
     // ----------------------------------------------------
     
     // **********************************************************************
-    // *** ¡IMPORTANTE! DEBES REEMPLAZAR ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
-    // Si esta URL es incorrecta (por ejemplo, sigue usando el endpoint /api/send_email o el ID de Formspree no es válido),
-    // el formulario FALLARÁ con un error 404 o 500.
+    // *** ¡ATENCIÓN! DEBES REEMPLAZAR ESTA URL CON TU ENDPOINT REAL DE FORMSPREE ***
+    // Si esta URL es incorrecta (por ejemplo, tiene un formato incorrecto o no existe),
+    // la solicitud fallará con un error. EL ERROR 405 CASI SIEMPRE SIGNIFICA QUE ESTA URL ES INVÁLIDA
+    // O NO APUNTA A UN SERVICIO QUE ACEPTE PETICIONES POST (como Formspree).
     const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xnnwvdkl'; 
     // **********************************************************************
 
@@ -189,7 +191,7 @@
     }
 
     form.addEventListener('submit', async function(event) {
-        event.preventDefault(); 
+        event.preventDefault(); // ¡CRUCIAL! Previene el envío por defecto del navegador.
 
         const formData = new FormData(form);
 
@@ -218,12 +220,73 @@
 
             } else {
                 // Fallo: Mostramos la alerta de error
-                let message = 'Hubo un error al enviar el formulario. **Verifica que la URL de Formspree sea correcta.**';
+                let message = 'Hubo un error al enviar. **Es probable que la URL de Formspree sea incorrecta (Error 405 o 404).**';
                 
                 if (response.status === 404) {
                      message = 'Error 404: Formulario no encontrado. Revisa la URL de Formspree.';
+                } else if (response.status === 405) {
+                     message = 'Error 405: Método no permitido. **¡Revisa urgentemente la constante FORMSPREE_ENDPOINT!**';
                 } else if (response.status === 422) {
                     message = 'Error 422: Datos no válidos. Asegúrate de rellenar todos los campos requeridos.';
                 } else {
                     try {
-                        const errorData = await
+                        const errorData = await response.json();
+                        message = errorData.error || message;
+                    } catch (e) {
+                        message = `Error de Formspree (código: ${response.status}). Inténtalo de nuevo.`;
+                    }
+                }
+                showAlert(message, 'error');
+            }
+
+        } catch (error) {
+            console.error('Error de conexión o fetch:', error);
+            // Error de red (por ejemplo, desconexión)
+            showAlert('Error de conexión. Revisa tu red o inténtalo de nuevo.', 'error');
+        } finally {
+            // Restablecer el botón solo si NO fue un éxito
+            if (successMessage.classList.contains('hidden')) {
+                button.disabled = false;
+                button.textContent = 'Enviar Solicitud';
+                button.classList.remove('bg-gray-500');
+                button.classList.add('bg-primary');
+            }
+        }
+    });
+
+    /**
+     * Muestra una alerta de error.
+     */
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const bgColor = 'bg-red-600';
+        const iconSvg = '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />';
+
+        const alertHTML = `
+            <div class="${bgColor} text-white p-4 rounded-lg flex items-center shadow-md">
+                <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    ${iconSvg}
+                </svg>
+                <p class="text-sm font-medium">${message}</p>
+            </div>
+        `;
+        
+        alertContainer.innerHTML = alertHTML;
+        alertContainer.classList.remove('alert-closed');
+        alertContainer.classList.add('alert-open');
+    }
+
+    /**
+     * Oculta el contenedor de alerta.
+     */
+    function hideAlert() {
+        const alertContainer = document.getElementById('alertContainer');
+        
+        alertContainer.classList.remove('alert-open');
+        alertContainer.classList.add('alert-closed');
+
+        setTimeout(() => {
+            alertContainer.innerHTML = '';
+        }, 300); 
+    }
+</script>
