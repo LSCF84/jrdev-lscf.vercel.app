@@ -1,64 +1,63 @@
+# 🚀 Jrdev - Portafolio de Desarrollador Junior LSCF84
 
+> "Construyendo el futuro digital: Mi camino como desarrollador junior."
 
-This is a multi-themed portfolio landing page 
+Este repositorio contiene la landing page principal de mi portafolio, `Jrdev`. Sirve como una presentación concisa y visualmente atractiva de mis habilidades, experiencia y proyectos clave mientras avanzo en mi carrera como desarrollador.
 
-## Customizing
+---
 
-### Tabs
+## ✨ Características Principales
 
-To add new tabs, add a button in tabs section
-```html
- <!-- tabs section -->
-<div class="tw-absolute tw-left-[50%] tw-translate-x-[-50%]  
-            tw-flex tw-p-1 tw-px-4 tw-rounded-md tw-gap-4 
-            tw-border-2 tw-border-primary">
-    ...
+* **Diseño Multi-Tema:** Plantilla base con soporte para múltiples temas.
+* **Página de Aterrizaje:** Ideal para ser la primera impresión profesional.
+* **Secciones Modulares (Pestañas):** Contenido organizado por pestañas para una navegación limpia (Habilidades, Proyectos, Contacto).
+* **Diseño Limpio:** Estilizado con Tailwind CSS.
+
+## 🔗 Ver en Vivo
+
+Puedes explorar la demo en producción aquí:
+
+* **URL:** [https://jrdev-lscf.vercel.app/](https://jrdev-lscf.vercel.app/)
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+El proyecto fue construido con un enfoque en la simplicidad y el uso de herramientas modernas de frontend:
+
+* **Lenguajes:** HTML, CSS, JavaScript
+* **Estilizado:** [Tailwind CSS](https://tailwindcss.com/) (Clases prefijadas con `tw-`)
+* **Despliegue:** [Vercel](https://vercel.com/)
+
+---
+
+## 🏗️ Guía de Uso (Personalización)
+
+Esta plantilla se basa en el repositorio original **[awesome-landing-pages de PaulleDemon](https://github.com/PaulleDemon/awesome-landing-pages)**.
+
+### Pestañas (Tabs)
+
+Para añadir nuevas pestañas, sigue la estructura:
+
+1.  **Añadir el Botón de Navegación:**
+    ```html
     <button class="tab-btn" onclick="openTab(event, 'newtab')">New tab</button>
-    ...
-</div>
-```
+    ```
 
-Now to display content add a section as follows with `tab-content` className and `data-tab-name` attribute
-```html
-<section class="tab-content tw-w-full tw-h-full
-                    max-lg:tw-p-4 tw-flex tw-flex-col 
-                    tw-overflow-hidden tw-relative"
-                data-tab-name="skills"
+2.  **Añadir la Sección de Contenido:** Usa el atributo `data-tab-name` para vincular el contenido con el botón.
+    ```html
+    <section class="tab-content tw-w-full tw-h-full max-lg:tw-p-4 tw-flex tw-flex-col tw-overflow-hidden tw-relative"
+                data-tab-name="newtab" 
                 >
-    ...
-</section>
-```
+        </section>
+    ```
 
+### Uso de Tailwind CSS
 
-**Github**: https://github.com/PaulleDemon/awesome-landing-pages
+Todas las clases de Tailwind están prefijadas con `tw-` para evitar conflictos de estilo.
 
-## Usage
+#### Desarrollo
 
-* This template uses tailwind css every tailwind class are prefixed with `tw-`, to help differentiate
-  between tailwind classes and other classes  
-
-During development add the following to head tag
-
-```html
-<link rel="stylesheet" href="tailwind-runtime.css"><!--replace with path to your tailwind runtime-->
-```
-During production use
-
-```html
-<link rel="stylesheet" href="tailwind-build.css"><!--replace with path to your tailwind build-->
-```
-
-To start Tailwind during development use
-```html
+Para iniciar el modo de desarrollo de Tailwind (requiere Node.js y npm/yarn):
+```bash
 npm run start:tailwind
-```
-
-To create a build file use
-```html
-npm run build:tailwind
-```
-
-
-## Credits
-
-Credits for programming icons: icons8.com
