@@ -586,7 +586,7 @@
             </div>
         </main>
 
-        <div id="cookie-banner" class="tw-fixed tw-bottom-0 tw-left-0 tw-right-0 tw-bg-slate-700 tw-text-white tw-p-4 tw-shadow-2xl tw-z-[100] tw-hidden">
+        <div id="cookie-banner" class="tw-fixed tw-bottom-0 tw-left-0 tw-right-0 tw-bg-slate-700 tw-text-white tw-p-4 tw-shadow-2xl tw-z-[100]">
             <div class="tw-max-w-7xl tw-mx-auto tw-flex tw-flex-col md:tw-flex-row tw-items-center tw-justify-between tw-gap-3">
                 <p class="tw-text-sm tw-text-center md:tw-text-left tw-flex-1">
                     🍪 Este sitio utiliza cookies para mejorar la experiencia de usuario y realizar análisis de tráfico. Al hacer clic en **"Aceptar"**, aceptas nuestra política de cookies.
@@ -610,7 +610,7 @@
         integrity="sha512-AY2+JxnBETJ0wcXnLPCcZJIJx0eimy3OJ55k2Jx4RtYC+XdIi2VtJQ+tP3BaTst4otlGG1TtPJ9fKrAUnRdQ=="
         crossorigin="anonymous"
         referrerpolicy="no-referrer"
-    ></script>
+    </script>
 
     <script src="./index.js"></script>
     
@@ -623,9 +623,10 @@
             // 1. Verificar si el usuario ya aceptó las cookies (usando localStorage)
             const hasAccepted = localStorage.getItem(cookieName);
 
-            if (!hasAccepted) {
-                // Si no ha aceptado, mostramos el banner
-                banner.classList.remove('tw-hidden');
+            if (hasAccepted) {
+                // Si ya aceptó, oculta inmediatamente (antes de cualquier animación)
+                banner.style.display = 'none';
+                banner.remove(); // Remueve el elemento del DOM para limpiar
             }
 
             // 2. Manejar el clic en el botón "Aceptar"
@@ -638,7 +639,7 @@
                 banner.style.transition = 'opacity 0.5s ease-in-out';
                 
                 setTimeout(() => {
-                    banner.classList.add('tw-hidden');
+                    banner.style.display = 'none'; // Asegura que desaparezca
                     banner.remove(); // Remueve el elemento del DOM para limpiar
                 }, 500); // Espera 500ms (el tiempo de la transición) antes de ocultar/remover
             });
