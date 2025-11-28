@@ -37,10 +37,10 @@ header{
     left: 0;
     right: 0;
     
-    /* 🚀 CORRECCIONES APLICADAS 🚀 */
-    z-index: 9999; /* Corregido: Máxima prioridad para que no se oculte */
-    text-align: center; /* Corregido: Centra el contenido */
-    display: block; /* Asegura que el contenedor esté visible */
+    /* 🚀 ESTILOS CORREGIDOS: VISIBILIDAD y CENTRADO 🚀 */
+    z-index: 9999; /* Asegura que esté en la capa superior y visible */
+    text-align: center; /* Centra el texto y el botón */
+    display: block; /* Asegura que no esté oculto */
     
     box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1), 0 -2px 4px -2px rgb(0 0 0 / 0.1);
 }
