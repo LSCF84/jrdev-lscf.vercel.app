@@ -1,4 +1,4 @@
-# 🚀 Jrdev - Portafolio de Desarrollador Junior 
+# 🚀 Portafolio de Desarrollador Junior 
 
 > "Construyendo el futuro digital: Mi camino como desarrollador junior."
 
