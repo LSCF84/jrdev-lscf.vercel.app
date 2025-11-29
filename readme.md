@@ -1,8 +1,10 @@
-# 🚀 Jrdev - Portafolio de Desarrollador Junior LSCF84
+# 🚀 Jrdev - Portafolio de Desarrollador Junior 
 
 > "Construyendo el futuro digital: Mi camino como desarrollador junior."
 
 Este repositorio contiene la landing page principal de mi portafolio, `Jrdev`. Sirve como una presentación concisa y visualmente atractiva de mis habilidades, experiencia y proyectos clave mientras avanzo en mi carrera como desarrollador.
+
+[Captura de pantalla de la aplicación de Portfolio](assets/images/jrdev-lscf.vercel.app.png)
 
 ---
 
