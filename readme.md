@@ -32,34 +32,46 @@ El proyecto fue construido con un enfoque en la simplicidad y el uso de herramie
 * **Despliegue:** [Vercel](https://vercel.com/)
 
 ---
-
-## 🏗️ Guía de Uso (Personalización)
-
-Esta plantilla se basa en el repositorio original **[awesome-landing-pages de PaulleDemon](https://github.com/PaulleDemon/awesome-landing-pages)**.
-
-### Pestañas (Tabs)
-
-Para añadir nuevas pestañas, sigue la estructura:
-
-1.  **Añadir el Botón de Navegación:**
-    ```html
-    <button class="tab-btn" onclick="openTab(event, 'newtab')">New tab</button>
+### Pasos de Configuración
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone [https://github.com/LSCF84/Portfolio.git](https://github.com/LSCF84/Portfolio.git)
     ```
 
-2.  **Añadir la Sección de Contenido:** Usa el atributo `data-tab-name` para vincular el contenido con el botón.
-    ```html
-    <section class="tab-content tw-w-full tw-h-full max-lg:tw-p-4 tw-flex tw-flex-col tw-overflow-hidden tw-relative"
-                data-tab-name="newtab" 
-                >
-        </section>
+2.  **Acceder al directorio:**
+    ```bash
+    cd Portfolio
     ```
 
-### Uso de Tailwind CSS
+3.  **Instalar dependencias (si aplica):**
+    ```bash
+    npm install 
+    # o
+    yarn install
+    ```
 
-Todas las clases de Tailwind están prefijadas con `tw-` para evitar conflictos de estilo.
+4.  **Iniciar el servidor de desarrollo:**
+    ```bash
+    npm run dev
+    # o
+    npm start
+    ```
 
-#### Desarrollo
+El portfolio estará disponible en `http://localhost:[RELLENAR PUERTO]`.
 
-Para iniciar el modo de desarrollo de Tailwind (requiere Node.js y npm/yarn):
-```bash
-npm run start:tailwind
+---
+
+## 🔗 Enlaces
+
+* **Mi Perfil de GitHub:** [https://github.com/LSCF84](https://github.com/LSCF84)
+
+---
+
+## 📬 Contacto
+
+Si tienes alguna pregunta, oportunidad de colaboración o simplemente quieres saludar, no dudes en contactarme:
+
+* **GitHub:** [@LSCF84](https://github.com/LSCF84)
+* **Correo Electrónico:** l.sergio.camacho.fernandez@gmail.com
+
+---
